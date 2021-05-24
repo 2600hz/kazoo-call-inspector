@@ -1,5 +1,5 @@
 %%%-----------------------------------------------------------------------------
-%%% @copyright (C) 2015-2020, 2600Hz
+%%% @copyright (C) 2015-2021, 2600Hz
 %%% @doc
 %%% This Source Code Form is subject to the terms of the Mozilla Public
 %%% License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,9 +13,9 @@
 
 -include("call_inspector.hrl").
 
--spec handle_req(kz_json:object(), kz_term:proplist()) -> ok.
+-spec handle_req(kz_json:object(), kz_term:proplist()) -> 'ok'.
 handle_req(JObj, _Props) ->
-    true = kapi_inspector:filter_req_v(JObj),
+    'true' = kapi_inspector:filter_req_v(JObj),
     CallIds = [CallId
                || CallId <- kz_json:get_value(<<"Call-IDs">>, JObj, []),
                   ci_datastore:callid_exists(CallId)

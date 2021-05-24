@@ -1,5 +1,5 @@
 %%%-----------------------------------------------------------------------------
-%%% @copyright (C) 2015-2020, 2600Hz
+%%% @copyright (C) 2015-2021, 2600Hz
 %%% @doc
 %%% This Source Code Form is subject to the terms of the Mozilla Public
 %%% License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,12 +13,12 @@
 
 -include("call_inspector.hrl").
 
--spec handle_req(kz_json:object(), kz_term:proplist()) -> ok.
+-spec handle_req(kz_json:object(), kz_term:proplist()) -> 'ok'.
 handle_req(JObj, _) ->
-    true = kapi_inspector:lookup_req_v(JObj),
+    'true' = kapi_inspector:lookup_req_v(JObj),
     Props = ci_datastore:lookup_callid(kz_json:get_value(<<"Call-ID">>, JObj)),
-    Chunks = props:get_value(chunks, Props, []),
-    Analysis = props:get_value(analysis, Props, []),
+    Chunks = props:get_value('chunks', Props, []),
+    Analysis = props:get_value('analysis', Props, []),
     Data = kz_json:from_list(
              [{<<"Chunks">>, chunks_as_json(Chunks)}
              ,{<<"Dialog-Entities">>, ci_chunk:get_dialog_entities(Chunks)}

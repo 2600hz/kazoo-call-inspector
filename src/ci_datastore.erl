@@ -1,5 +1,5 @@
 %%%-----------------------------------------------------------------------------
-%%% @copyright (C) 2015-2020, 2600Hz
+%%% @copyright (C) 2015-2021, 2600Hz
 %%% @doc
 %%% This Source Code Form is subject to the terms of the Mozilla Public
 %%% License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,7 +39,6 @@
 -type state() :: #state{}.
 
 -record(object, {call_id :: kz_term:ne_binary()
-                ,timestamp = kz_time:now_s() :: kz_time:gregorian_seconds()
                 ,type :: chunk | analysis
                 ,value :: ci_chunk:chunk() | ci_analysis:analysis()
                 }).
