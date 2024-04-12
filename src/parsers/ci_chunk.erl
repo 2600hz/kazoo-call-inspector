@@ -1,5 +1,5 @@
 %%%-----------------------------------------------------------------------------
-%%% @copyright (C) 2015-2023, 2600Hz
+%%% @copyright (C) 2015-2024, 2600Hz
 %%% @doc
 %%% This Source Code Form is subject to the terms of the Mozilla Public
 %%% License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -55,14 +55,8 @@
 -include("call_inspector.hrl").
 
 -define(SETTER(Field),
-        Field(#ci_chunk{}=Chunk, Value) ->
-               Chunk#ci_chunk{Field = Value}
-                   ).
-
--define(GETTER(Field),
-        Field(#ci_chunk{Field = Value}) ->
-               Value
-                   ).
+        Field(#ci_chunk{}=Chunk, Value) -> Chunk#ci_chunk{Field = Value}
+                                               ).
 
 %% API
 
@@ -76,63 +70,71 @@ setters(#ci_chunk{}=Chunk, Setters) ->
     NewChunk#ci_chunk{ref_timestamp = ci_parsers_util:timestamp()}.
 
 -spec call_id(chunk(), kz_term:ne_binary()) -> chunk().
-?SETTER(call_id).
+call_id(#ci_chunk{}=Chunk, Value) -> Chunk#ci_chunk{call_id = Value}.
+
 -spec call_id(chunk()) -> kz_term:api_binary().
-?GETTER(call_id).
+call_id(#ci_chunk{call_id = Value}) -> Value.
 
 -spec data(chunk(), kz_term:ne_binaries()) -> chunk().
-?SETTER(data).
+data(#ci_chunk{}=Chunk, Value) -> Chunk#ci_chunk{data = Value}.
+
 -spec data(chunk()) -> kz_term:ne_binaries().
-?GETTER(data).
+data(#ci_chunk{data = Value}) -> Value.
+
 -spec append_data(chunk(), kz_term:ne_binary()) -> chunk().
 append_data(#ci_chunk{data=D}=Chunk, Data) ->
     Chunk#ci_chunk{data=[Data|D]}.
 
 -spec timestamp(chunk(), kz_term:api_float()) -> chunk().
-?SETTER(timestamp).
+timestamp(#ci_chunk{}=Chunk, Value) -> Chunk#ci_chunk{timestamp = Value}.
+
 -spec timestamp(chunk()) -> kz_term:api_float().
-?GETTER(timestamp).
+timestamp(#ci_chunk{timestamp = Value}) -> Value.
 
 -spec ref_timestamp(chunk()) -> float().
-?GETTER(ref_timestamp).
+ref_timestamp(#ci_chunk{ref_timestamp = Value}) -> Value.
 
 -spec src_ip(chunk(), kz_term:ne_binary()) -> chunk().
 src_ip(#ci_chunk{}=Chunk, Val) ->
     Chunk#ci_chunk{src_ip = resolve(Val)}.
 -spec src_ip(chunk()) -> kz_term:api_binary().
-?GETTER(src_ip).
+src_ip(#ci_chunk{src_ip = Value}) -> Value.
 
 -spec src_port(chunk(), pos_integer()) -> chunk().
-?SETTER(src_port).
+src_port(#ci_chunk{}=Chunk, Value) -> Chunk#ci_chunk{src_port = Value}.
+
 -spec src_port(chunk()) -> kz_term:api_pos_integer().
-?GETTER(src_port).
+src_port(#ci_chunk{src_port = Value}) -> Value.
 
 -spec dst_ip(chunk(), kz_term:ne_binary()) -> chunk().
 dst_ip(#ci_chunk{}=Chunk, Val) ->
     Chunk#ci_chunk{dst_ip = resolve(Val)}.
 -spec dst_ip(chunk()) -> kz_term:api_binary().
-?GETTER(dst_ip).
+dst_ip(#ci_chunk{dst_ip = Value}) -> Value.
 
 -spec dst_port(chunk(), pos_integer()) -> chunk().
-?SETTER(dst_port).
+dst_port(#ci_chunk{}=Chunk, Value) -> Chunk#ci_chunk{dst_port = Value}.
+
 -spec dst_port(chunk()) -> kz_term:api_pos_integer().
-?GETTER(dst_port).
+dst_port(#ci_chunk{dst_port = Value}) -> Value.
 
 -spec parser(chunk(), atom()) -> chunk().
 parser(#ci_chunk{}=Chunk, Parser) ->
     Chunk#ci_chunk{parser = kz_term:to_binary(Parser)}.
 -spec parser(chunk()) -> kz_term:api_binary().
-?GETTER(parser).
+parser(#ci_chunk{parser = Value}) -> Value.
 
 -spec label(chunk(), kz_term:ne_binary()) -> chunk().
-?SETTER(label).
+label(#ci_chunk{}=Chunk, Value) -> Chunk#ci_chunk{label = Value}.
+
 -spec label(chunk()) -> kz_term:api_binary().
-?GETTER(label).
+label(#ci_chunk{label = Value}) -> Value.
 
 -spec c_seq(chunk(), kz_term:ne_binary()) -> chunk().
-?SETTER(c_seq).
+c_seq(#ci_chunk{}=Chunk, Value) -> Chunk#ci_chunk{c_seq = Value}.
+
 -spec c_seq(chunk()) -> kz_term:api_binary().
-?GETTER(c_seq).
+c_seq(#ci_chunk{c_seq = Value}) -> Value.
 
 -spec to_json(chunk()) -> kz_json:object().
 to_json(Chunk) ->
@@ -260,13 +262,13 @@ first_pass(Before, [Ordered|InOrder], [Chunk|ToOrder], UnMergeable) ->
     of
         {'true', 'true', 'true'} ->
             first_pass([], Before++[Ordered|InOrder], ToOrder, [Chunk|UnMergeable]);
-        {'true', 'true', ______} ->
+        {'true', 'true', _} ->
             first_pass([], Before++[Ordered]++[Chunk|InOrder], ToOrder, UnMergeable);
-        {'true', ______, 'true'} ->
+        {'true', _, 'true'} ->
             first_pass([], Before++[Chunk]++[Ordered|InOrder], ToOrder, UnMergeable);
-        {'true', ______, ______} ->
+        {'true', _, _} ->
             first_pass([], Before++[Ordered|InOrder], ToOrder, [Chunk|UnMergeable]);
-        {'false', _____, ______} ->
+        {'false', _, _} ->
             first_pass(Before++[Ordered], InOrder, [Chunk|ToOrder], UnMergeable)
     end;
 first_pass(Before, [], [Chunk|ToOrder], UnMergeable) ->

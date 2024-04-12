@@ -1,5 +1,5 @@
 %%%-----------------------------------------------------------------------------
-%%% @copyright (C) 2015-2023, 2600Hz
+%%% @copyright (C) 2015-2024, 2600Hz
 %%% @doc
 %%% This Source Code Form is subject to the terms of the Mozilla Public
 %%% License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,7 +39,7 @@
 -type state() :: #state{}.
 
 -record(object, {call_id :: kz_term:ne_binary()
-                ,type :: chunk | analysis
+                ,type :: 'chunk' | 'analysis'
                 ,value :: ci_chunk:chunk() | ci_analysis:analysis()
                 }).
 -type object() :: #object{}.
@@ -118,7 +118,7 @@ flush(CallId) ->
 %% @doc Initializes the server.
 %% @end
 %%------------------------------------------------------------------------------
--spec init([]) -> {'ok', #state{}}.
+-spec init([]) -> {'ok', state()}.
 init([]) ->
     lager:debug("ensuring directory ~s exists", [?CI_DIR]),
     mkdir(?CI_DIR),
